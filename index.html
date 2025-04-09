@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Enkripsi Wallet Crypto + QR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+  <script src="http://yandex.st/jquery/1.4.2/jquery.min.js"></script>
+  <script src="/assets/blowfish.js"></script>
+
+  <link href="/assets/style.css" rel="stylesheet">
+</head>
+<body class="p-2">
+  <div class="container">
+    <h1 class="mb-4 gradient-purple-blue">Enkripsi Wallet Crypto</h1>
+
+    <!-- Input -->
+    <div class="section-card">
+      <h5 class="mb-3">🔑 Input Data</h5>
+
+      <div class="mb-3">
+        <label class="form-label">Wallet Seed / Private Key <small>(12 atau 24 kata)</small></label>
+        <textarea id="paraphrase" class="form-control" rows="3" placeholder="Contoh: word1 word2 word3 ..."></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Key / Password <small>(4-56 karakter)</small></label>
+        <div class="input-group">
+          <input type="password" id="key" class="form-control" placeholder="Masukkan key">
+          <button class="btn btn-secondary" type="button" onclick="toggleKey()">👁️</button>
+        </div>
+      </div>
+
+      <div id="error" class="text-danger mt-2 mb-2"></div>
+
+      <button class="btn btn-primary w-100" onclick="encrypt()">🔐 Enkripsi Sekarang</button>
+    </div>
+
+    <!-- Output -->
+    <div class="section-card">
+      <h5 class="mb-3">📦 Hasil Enkripsi</h5>
+      <textarea id="output" class="form-control output-box" rows="3" readonly></textarea>
+      <button class="btn btn-secondary mt-2" onclick="copyText()">📋 Copy</button>
+      <button class="btn btn-secondary mt-2 ms-2" onclick="saveToText()">💾 Simpan</button>
+    </div>
+
+    <!-- QR Code -->
+    <div class="section-card">
+      <h5 class="mb-3">📱 QR Code</h5>
+      <div id="qrcode"></div>
+      <button class="btn btn-secondary mt-3" onclick="saveQR()">💾 Simpan</button>
+    </div>
+  </div>
+
+  <script>
+    const iv = "12345678";
+
+    function encrypt() {
+      const phrase = document.getElementById("paraphrase").value.trim();
+      const key = document.getElementById("key").value.trim();
+      const outputEl = document.getElementById("output");
+      const qrEl = document.getElementById("qrcode");
+      const errorEl = document.getElementById("error");
+
+      outputEl.value = "";
+      qrEl.innerHTML = "";
+      errorEl.textContent = "";
+
+      if (!phrase || !key) {
+        errorEl.textContent = "Seed/Private Key dan Key wajib diisi.";
+        return;
+      }
+
+      if (key.length < 4 || key.length > 56) {
+        errorEl.textContent = "Key harus antara 4 hingga 56 karakter.";
+        return;
+      }
+
+      try {
+        const bf = new Blowfish(key);
+        let res = bf.encrypt(phrase);
+        res = bf.base64Encode(res);
+        outputEl.value = res;
+
+        QRCode.toCanvas(document.createElement("canvas"), res, { width: 220 }, function (err, canvas) {
+          if (err) {
+            errorEl.textContent = "QR Code Error: " + err.message;
+          } else {
+            qrEl.appendChild(canvas);
+          }
+        });
+        
+        outputEl.focus();
+      } catch (e) {
+        errorEl.textContent = "Enkripsi Error: " + e.message;
+      }
+    }
+
+    function copyText() {
+      const output = document.getElementById("output");
+      output.select();
+      document.execCommand("copy");
+    }
+
+    function toggleKey() {
+      const keyInput = document.getElementById("key");
+      keyInput.type = keyInput.type === "password" ? "text" : "password";
+    }
+    
+    function saveToText() {
+      const text = document.getElementById("output").value;
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "encrypted_wallet.txt";
+      link.click();
+    }
+    
+    function saveQR() {
+      const canvas = document.querySelector("#qrcode canvas");
+      if (!canvas) return alert("QR belum dibuat!");
+    
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/jpeg");
+      link.download = "wallet_qrcode.jpg";
+      link.click();
+    }
+  </script>
+</body>
+</html>
