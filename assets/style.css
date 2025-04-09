@@ -1,0 +1,63 @@
+    body {
+      background-color: #0d1117;
+      color: #c9d1d9;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .form-control, textarea {
+      background-color: #161b22;
+      color: #f0f6fc;
+      border: 1px solid #30363d;
+    }
+    .form-control:focus {
+      background-color: #1f2733;
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25);
+      color: #f0f6fc;
+    }
+    .btn-primary {
+      background-image: linear-gradient(to right, #7f00ff, #4facfe);
+      border: none;
+      color: white;
+    }
+    .btn-primary:hover {
+      background-image: linear-gradient(to right, #4facfe, #7f00ff);
+    }
+    .btn-secondary {
+      background-color: #30363d;
+      color: #c9d1d9;
+      border: none;
+    }
+    .btn-secondary:hover {
+      background-color: #444c56;
+    }
+    .output-box {
+      font-family: monospace;
+      font-size: 0.95rem;
+      background-color: #161b22;
+    }
+    .section-card {
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      background-color: #161b22;
+    }
+    .form-label small {
+      color: #8b949e;
+      font-weight: normal;
+    }
+    .gradient-purple-blue {
+  background: linear-gradient(
+    90deg,
+    #b993f7 0%,
+    #8ec5fc 50%,
+    #5cafff 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+    ::placeholder {
+      color: #8b949e !important;
+      opacity: 1;
+    }
