@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Dekripsi Wallet Crypto + QR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+
+  <script src="/assets/blowfish.js"></script>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body class="p-2">
+  <div class="container">
+    <h1 class="mb-4 gradient-purple-blue">Dekripsi Wallet Crypto</h1>
+
+    <div class="section-card">
+      <h5 class="mb-3">🔓 Input Data</h5>
+      
+      <div class="mb-3">
+        <p class="form-label">Scan QR Code</p>
+        <div id="reader" style="width: 250px;"></div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">atau Masukkan data terenkripsi</label>
+        <textarea id="encrypted" class="form-control" rows="2" placeholder="..." oninput="autoDecrypt()"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Key / Password <small>(4-56 karakter)</small></label>
+        <input type="text" id="key" class="form-control" placeholder="Masukkan key..." oninput="autoDecrypt()">
+      </div>
+
+      <div id="error" class="text-danger mt-2 mb-2"></div>
+    </div>
+
+    <div class="section-card">
+      <h5 class="mb-3">📦 Hasil Dekripsi</h5>
+      <textarea id="decrypted" class="form-control output-box" rows="2" readonly></textarea>
+      <button class="btn btn-secondary mt-2" onclick="copyText()">📋 Copy</button>
+    </div>
+  </div>
+
+  <script>
+    function autoDecrypt() {
+      const encrypted = document.getElementById("encrypted").value.trim();
+      const keyEl = document.getElementById("key");
+      const key = keyEl.value.trim();
+      const decryptedEl = document.getElementById("decrypted");
+      const errorEl = document.getElementById("error");
+
+      decryptedEl.value = "";
+      errorEl.textContent = "";
+
+      if (!encrypted || !key) return;
+
+      if (key.length < 4 || key.length > 56) {
+        errorEl.textContent = "Key harus antara 4 hingga 56 karakter.";
+        return;
+      }
+
+      try {
+        const bf = new Blowfish(key);
+        const decoded = bf.base64Decode(encrypted);
+        const result = bf.decrypt(decoded);
+        decryptedEl.value = result;
+        keyEl.focus();
+      } catch (e) {
+        errorEl.textContent = "Dekripsi Error: " + e.message;
+      }
+    }
+
+    function onScanSuccess(qrMessage) {
+      document.getElementById("encrypted").value = qrMessage;
+      autoDecrypt();
+    }
+    
+    function copyText() {
+      const output = document.getElementById("decrypted");
+      output.select();
+      document.execCommand("copy");
+    }
+
+    new Html5Qrcode("reader").start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 200 },
+      onScanSuccess,
+      error => {}
+    );
+  </script>
+</body>
+</html>
