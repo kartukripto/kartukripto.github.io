@@ -3,34 +3,44 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Enkripsi Wallet Crypto</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <title>Enkripsi Wallet Crypto</title>
+
+  <meta name="description" content="Enkripsi seed phrase wallet crypto dan simpan dalam QR Code yang terenkripsi.">
+  <meta name="keywords" content="crypto wallet, enkripsi, blowfish, qr code, keamanan digital">
+  <meta name="author" content="KartuKripto">
+  <meta property="og:title" content="Enkripsi Wallet Crypto">
+  <meta property="og:description" content="Enkripsi seed phrase wallet crypto dan simpan dalam QR Code yang terenkripsi.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kartukripto.github.io/">
+  <meta property="og:image" content="https://kartukripto.github.io/assets/og-image.png">
+
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 
   <link href="/assets/bootstrap-5.3.0.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-  <script src="/assets/qrcode-1.5.1.min.js"></script>
-  <script src="/assets/jquery-1.4.2.min.js"></script>
-  <script src="/assets/blowfish.js"></script>
-
   <link href="/assets/style.css" rel="stylesheet">
+  <script src="/assets/jquery-1.4.2.min.js"></script>
+  <script src="/assets/qrcode-1.5.1.min.js"></script>
+  <script src="/assets/blowfish.js"></script>
   <script src="/assets/script.js"></script>
 </head>
 
 <body>
-  <div class="container-fluid">
-    <div class="row">
-      <main class="col-lg-9 col-xl-10 min-vh-100 p-3">
-        <h1 class="mb-4 gradient-purple-blue">Enkripsi Wallet Crypto</h1>
+  <header class="p-3 text-center">
+    <h1 class="gradient-purple-blue">Enkripsi Wallet Crypto</h1>
+  </header>
 
+  <main class="container-fluid">
+    <section class="row">
+      <div class="col-lg-9 col-xl-10 min-vh-100 p-3">
         <!-- Input -->
-        <div class="section-card">
-          <h5 class="mb-3">🔑 Input Data</h5>
+        <section class="section-card" aria-labelledby="input-section">
+          <h2 id="input-section" class="mb-3">🔑 Input Data</h2>
 
           <div class="mb-3">
             <label class="form-label">Wallet Seed / Private Key <small>(12 atau 24 kata)</small></label>
-            <textarea id="paraphrase" class="form-control" rows="3"
-              placeholder="word1 word2 word3 ..."></textarea>
+            <textarea id="paraphrase" class="form-control" rows="3" placeholder="word1 word2 word3 ..."></textarea>
           </div>
 
           <div class="mb-3">
@@ -44,29 +54,30 @@
           <div id="error" class="text-danger mt-2 mb-2"></div>
 
           <button class="btn btn-primary w-100" onclick="encrypt()">🔐 Enkripsi Sekarang</button>
-        </div>
+        </section>
 
         <!-- Output -->
-        <div class="section-card">
-          <h5 class="mb-3">📦 Hasil Enkripsi</h5>
+        <section class="section-card" aria-labelledby="output-section">
+          <h2 id="output-section" class="mb-3">📦 Hasil Enkripsi</h2>
           <textarea id="output" class="form-control output-box" rows="3" readonly></textarea>
           <button class="btn btn-secondary mt-2" onclick="copyText()">📋 Copy</button>
           <button class="btn btn-secondary mt-2 ms-2" onclick="saveToText()">💾 Simpan</button>
-        </div>
+        </section>
 
         <!-- QR Code -->
-        <div class="section-card">
-          <h5 class="mb-3">📱 QR Code</h5>
+        <section class="section-card" aria-labelledby="qr-section">
+          <h2 id="qr-section" class="mb-3">📱 QR Code</h2>
           <div id="qrcode"></div>
           <button class="btn btn-secondary mt-3" onclick="saveQR()">💾 Simpan</button>
-        </div>
+        </section>
 
-        <a href="https://github.com/kartukripto/kartukripto.github.io/" class="mt-5 text-center f-thin f-12 cursor-pointer">
-          &copy; <span id="year"></span> KartuKripto. All Right Reserved.
-        </a>
-      </main>
-    </div>
-  </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="mt-5 text-center f-thin f-12">
+    <p>&copy; <span id="year"></span> <a href="https://github.com/kartukripto/kartukripto.github.io/">KartuKripto</a>. All Rights Reserved.</p>
+  </footer>
 
   <script>
     function encrypt() {
@@ -96,11 +107,21 @@
         res = bf.base64Encode(res);
         outputEl.value = res;
 
+        // display
         QRCode.toCanvas(document.createElement("canvas"), res, { width: 220, margin: 2.1 }, function (err, canvas) {
           if (err) {
             errorEl.textContent = "QR Code Error: " + err.message;
           } else {
             canvas.style.borderRadius = "7px";
+            qrEl.appendChild(canvas);
+          }
+        });
+        // download
+        QRCode.toCanvas(document.createElement("canvas"), res, { width: 2048, margin: 2.1 }, function (err, canvas) {
+          if (!err) {
+            canvas.style.borderRadius = "7px";
+            canvas.id = "downloadQR";
+            canvas.style.display = "none";
             qrEl.appendChild(canvas);
           }
         });
@@ -132,15 +153,16 @@
     }
 
     function saveQR() {
-      const canvas = document.querySelector("#qrcode canvas");
+      const canvas = document.getElementById("downloadQR");
       if (!canvas) return alert("QR belum dibuat!");
 
       const link = document.createElement("a");
-      link.href = canvas.toDataURL("image/jpeg");
-      link.download = "wallet_qrcode.jpg";
+      link.href = canvas.toDataURL("image/png");
+      link.download = "wallet_qrcode_hd.png";
       link.click();
     }
   </script>
+
   <script>
     useSideBar();
     useMobileNav();

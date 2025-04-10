@@ -5,57 +5,72 @@
   <meta charset="UTF-8">
   <title>Deskripsi Wallet Crypto</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <meta name="description" content="Enkripsi seed phrase wallet crypto dan simpan dalam QR Code yang terenkripsi.">
+  <meta name="keywords" content="crypto wallet, enkripsi, blowfish, qr code, keamanan digital">
+  <meta name="author" content="KartuKripto">
+  <meta property="og:title" content="Enkripsi Wallet Crypto">
+  <meta property="og:description" content="Enkripsi seed phrase wallet crypto dan simpan dalam QR Code yang terenkripsi.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kartukripto.github.io/">
+  <meta property="og:image" content="https://kartukripto.github.io/assets/og-image.png">
+
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 
   <link href="/assets/bootstrap-5.3.0.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
   <link href="/assets/style.css" rel="stylesheet">
-
-  <script src="/assets/blowfish.js"></script>
   <script src="/assets/html5-qrcode.min.js"></script>
+  <script src="/assets/blowfish.js"></script>
   <script src="/assets/script.js"></script>
 </head>
 
 <body>
-  <div class="container-fluid">
-    <div class="row">
-      <main class="col-lg-9 col-xl-10 min-vh-100 p-3">
-        <h1 class="mb-4 gradient-purple-blue">Deskripsi Wallet Crypto</h1>
-
-        <div class="section-card">
-          <h5 class="mb-3">🔓 Input Data</h5>
-
+  <header class="p-3 text-center">
+    <h1 class="gradient-purple-blue">Deskripsi Wallet Crypto</h1>
+  </header>
+  
+  <main class="container-fluid">
+    <section class="row">
+      <div class="col-lg-9 col-xl-10 min-vh-100 p-3">
+  
+        <!-- Input Section -->
+        <section class="section-card" aria-labelledby="input-decrypt">
+          <h2 id="input-decrypt" class="mb-3">🔓 Input Data</h2>
+  
           <div class="mb-3">
             <p class="form-label">Scan QR Code</p>
             <div id="reader" style="width: 250px;"></div>
           </div>
-
+  
           <div class="mb-3">
             <label class="form-label">atau Masukkan data terenkripsi</label>
             <textarea id="encrypted" class="form-control" rows="2" placeholder="..." oninput="autoDecrypt()"></textarea>
           </div>
-
+  
           <div class="mb-3">
             <label class="form-label">Key / Password <small>(4-56 karakter)</small></label>
             <input type="text" id="key" class="form-control" placeholder="Masukkan key..." oninput="autoDecrypt()">
           </div>
-
+  
           <div id="error" class="text-danger mt-2 mb-2"></div>
-        </div>
-
-        <div class="section-card">
-          <h5 class="mb-3">📦 Hasil Deskripsi</h5>
+        </section>
+  
+        <!-- Output Section -->
+        <section class="section-card" aria-labelledby="output-decrypt">
+          <h2 id="output-decrypt" class="mb-3">📦 Hasil Deskripsi</h2>
           <textarea id="decrypted" class="form-control output-box" rows="2" readonly></textarea>
           <button class="btn btn-secondary mt-2" onclick="copyText()">📋 Copy</button>
-        </div>
-
-          <a href="https://github.com/kartukripto/kartukripto.github.io/" class="mt-5 text-center f-thin f-12 cursor-pointer">
-            &copy; <span id="year"></span> KartuKripto. All Right Reserved.
-          </a>
-        </div>
-      </main>
-    </div>
-  </div>
+        </section>
+  
+      </div>
+    </section>
+  </main>
+  
+  <footer class="mt-5 text-center f-thin f-12">
+    <p>&copy; <span id="year"></span> <a href="https://github.com/kartukripto/kartukripto.github.io/">KartuKripto</a>. All Rights Reserved.</p>
+  </footer>
+  
 
   <script>
     function autoDecrypt() {

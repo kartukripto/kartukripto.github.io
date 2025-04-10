@@ -38,7 +38,7 @@ function useSideBar() {
     nav.appendChild(ul);
 
     document.addEventListener("DOMContentLoaded", () => {
-        document.querySelector("body > div > div").prepend(nav);
+        document.querySelector("body > main > section").prepend(nav);
     });
 }
 
